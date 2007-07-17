@@ -1,10 +1,14 @@
+--- 
 abstract: Custom errorhandling in deployed applications
 author: Andreas Marienborg  C<< <andreas@startsiden.no> >>
 build_requires: 
   Test::More: 0
 distribution_type: module
-generated_by: Module::Install version 0.64
+generated_by: Module::Install version 0.67
 license: perl
+meta-spec: 
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+  version: 1.3
 name: Catalyst-Action-RenderView-ErrorHandler
 no_index: 
   directory: 
@@ -12,4 +16,5 @@ no_index:
     - t
 requires: 
   Catalyst::Action::RenderView: 0
-version: 0.0100
+  Moose: 0
+version: 0.0101
