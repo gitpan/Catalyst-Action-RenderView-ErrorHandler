@@ -23,4 +23,4 @@ requires:
   Catalyst::View::TT: 0
   Class::Inspector: 0
   Moose: 0
-version: 0.0103
+version: 0.0104
