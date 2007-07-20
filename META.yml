@@ -2,7 +2,11 @@
 abstract: Custom errorhandling in deployed applications
 author: Andreas Marienborg  C<< <andreas@startsiden.no> >>
 build_requires: 
+  Catalyst::Runtime: 0
+  FindBin: 0
+  HTTP::Request: 0
   Test::More: 0
+  Text::Diff: 0
 distribution_type: module
 generated_by: Module::Install version 0.67
 license: perl
@@ -19,4 +23,4 @@ requires:
   Catalyst::View::TT: 0
   Class::Inspector: 0
   Moose: 0
-version: 0.0102
+version: 0.0103
