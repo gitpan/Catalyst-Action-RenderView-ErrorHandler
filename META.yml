@@ -20,7 +20,7 @@ no_index:
     - t
 requires: 
   Catalyst::Action::RenderView: 0
-  Catalyst::View::TT: 0
+  Catalyst::View::TT: 0.25
   Class::Inspector: 0
   Moose: 0
-version: 0.0104
+version: 0.0105
