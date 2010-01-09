@@ -1,9 +1,13 @@
 package Catalyst::Action::RenderView::ErrorHandler;
+our $VERSION = '0.100090';
+
+
+# ABSTRACT: Custom errorhandling in deployed applications
 
 use warnings;
 use strict;
 use Carp;
-our $VERSION = '0.0105';
+use MRO::Compat;
 
 use Class::Inspector;
 
@@ -23,7 +27,7 @@ sub execute {
     my $self = shift;
     my ($controller, $c) = @_;
     
-    my $rv = $self->NEXT::execute(@_);
+    my $rv = $self->maybe::next::method(@_);
     return 1 unless (scalar(@{ $c->error }) or $c->res->status =~ /^4\d\d/);
     return 1 if ($c->debug);
     $self->actions({});
@@ -195,23 +199,23 @@ sub _expand {
     }
 }
 1; # Magic true value required at end of module
-__END__
+
+
+
+=pod
 
 =head1 NAME
 
 Catalyst::Action::RenderView::ErrorHandler - Custom errorhandling in deployed applications
 
-
 =head1 VERSION
 
-This document describes Catalyst::Action::RenderView::ErrorHandler version 0.0100
-
+version 0.100090
 
 =head1 SYNOPSIS
 
     sub end : ActionClass('RenderView::ErrorHandler') {}
 
-  
 =head1 DESCRIPTION
 
 We all dread the Please come back later screen. Its uninformative, non-
@@ -227,7 +231,7 @@ This module lets the developer configure what happens in case of emergency.
 
 =item Custom errorpage that fits your design you say? Aw come on :)
 
-=back
+=back 
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
@@ -272,11 +276,9 @@ in addition to rendering or sending something to the browser/client.
 
 =item "fallback" - default action taken on error.
 
-=back
+=back 
 
 The action is decided in that order.
-
-
 
 =head4 template
 
@@ -357,46 +359,20 @@ Inherited from L<Moose>
 
 Catalyst::Action::RenderView
 
-=head1 INCOMPATIBILITIES
-
-None reported.
-
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported.
-
 =head1 AUTHOR
 
-Andreas Marienborg  C<< <andreas@startsiden.no> >>
+  Andreas Marienborg <andremar@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Andreas Marienborg.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut 
 
 
-=head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2007, Andreas Marienborg C<< <andreas@startsiden.no> >>. All rights reserved.
+__END__
 
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
-
-
-=head1 DISCLAIMER OF WARRANTY
-
-BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
-OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
-EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
-YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR, OR CORRECTION.
-
-IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
-LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
-OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
-THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
-RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
-FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
-SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.

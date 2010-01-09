@@ -1,0 +1,31 @@
+{
+   "resources" : {
+      "repository" : "http://github.com/omega/catalyst-action-renderview-errorhandler"
+   },
+   "meta-spec" : {
+      "version" : 1.4,
+      "url" : "http://module-build.sourceforge.net/META-spec-v1.4.html"
+   },
+   "generated_by" : "Dist::Zilla version 1.092680",
+   "version" : "0.100090",
+   "name" : "Catalyst-Action-RenderView-ErrorHandler",
+   "author" : [
+      "Andreas Marienborg <andremar@cpan.org>"
+   ],
+   "license" : "perl",
+   "requires" : {
+      "Moose::Role" : 0,
+      "base" : "0",
+      "FindBin" : "0",
+      "Carp" : 0,
+      "Catalyst::Action::RenderView" : 0,
+      "Test::More" : "0",
+      "Text::Diff" : "0",
+      "Catalyst" : "0",
+      "Class::Inspector" : 0,
+      "Catalyst::Test" : "0",
+      "MRO::Compat" : "0",
+      "Moose" : "0"
+   },
+   "abstract" : "Custom errorhandling in deployed applications"
+}

@@ -1,20 +1,31 @@
-use inc::Module::Install;
 
-name 'Catalyst-Action-RenderView-ErrorHandler';
-all_from 'lib/Catalyst/Action/RenderView/ErrorHandler.pm';
+use strict;
+use warnings;
 
-build_requires 'Test::More';
-build_requires 'Text::Diff';
-build_requires 'FindBin';
-build_requires 'Catalyst::Runtime';
-build_requires 'HTTP::Request';
+use ExtUtils::MakeMaker;
 
-requires 'Catalyst::Action::RenderView';
-requires 'Moose';
-requires 'Catalyst::View::TT' => '0.25';
-requires 'Class::Inspector';
-
-auto_install;
-
-WriteAll;
+WriteMakefile(
+  DISTNAME  => 'Catalyst-Action-RenderView-ErrorHandler',
+  NAME      => 'Catalyst::Action::RenderView::ErrorHandler',
+  AUTHOR    => 'Andreas\ Marienborg\ \<andremar\@cpan\.org\>',
+  ABSTRACT  => 'Custom\ errorhandling\ in\ deployed\ applications',
+  VERSION   => '0.100090',
+  EXE_FILES => [ qw() ],
+  (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
+  PREREQ_PM    => {
+    "Moose::Role" => '0',
+    "base" => '0',
+    "FindBin" => '0',
+    "Carp" => '0',
+    "Catalyst::Action::RenderView" => '0',
+    "Test::More" => '0',
+    "Text::Diff" => '0',
+    "Catalyst" => '0',
+    "Class::Inspector" => '0',
+    "Catalyst::Test" => '0',
+    "MRO::Compat" => '0',
+    "Moose" => '0',
+  },
+  test => {TESTS => 't/*.t xt/*.t'}
+);
 
