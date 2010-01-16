@@ -1,7 +1,5 @@
 package Catalyst::Action::RenderView::ErrorHandler::Action::Log;
-our $VERSION = '0.100090';
-
-
+our $VERSION = '0.100160';
 #ABSTRACT: A logging action for errors.
 
 use strict;
@@ -26,7 +24,6 @@ sub perform {
 
 
 
-
 =pod
 
 =head1 NAME
@@ -35,12 +32,7 @@ Catalyst::Action::RenderView::ErrorHandler::Action::Log - A logging action for e
 
 =head1 VERSION
 
-version 0.100090
-
-=head1 DESCRIPTION
-
-Really a rather useless example of an ErrorHandler action. It uses catalysts
-logging facilities to log errors.
+version 0.100160
 
 =head1 SYNOPSIS
 
@@ -54,6 +46,11 @@ logging facilities to log errors.
             fallback:
                 actions:
                     - log-error
+
+=head1 DESCRIPTION
+
+Really a rather useless example of an ErrorHandler action. It uses catalysts
+logging facilities to log errors.
 
 =head1 INTERFACE
 
@@ -95,8 +92,7 @@ This software is copyright (c) 2010 by Andreas Marienborg.
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 
 
 __END__

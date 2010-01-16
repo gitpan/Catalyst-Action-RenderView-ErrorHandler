@@ -1,0 +1,28 @@
+---
+abstract: 'Custom errorhandling in deployed applications'
+author:
+  - 'Andreas Marienborg <andremar@cpan.org>'
+generated_by: 'Dist::Zilla version 1.093400'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Catalyst-Action-RenderView-ErrorHandler
+requires:
+  Carp: 0
+  Catalyst: 0
+  Catalyst::Action::RenderView: 0
+  Catalyst::Test: 0
+  Catalyst::View::TT: 0
+  Class::Inspector: 0
+  ExtUtils::MakeMaker: 0
+  FindBin: 0
+  MRO::Compat: 0
+  Moose: 0
+  Moose::Role: 0
+  Test::More: 0
+  Text::Diff: 0
+  base: 0
+resources:
+  repository: http://github.com/omega/catalyst-action-renderview-errorhandler
+version: 0.100160

@@ -1,7 +1,5 @@
 package Catalyst::Action::RenderView::ErrorHandler;
-our $VERSION = '0.100090';
-
-
+our $VERSION = '0.100160';
 # ABSTRACT: Custom errorhandling in deployed applications
 
 use warnings;
@@ -201,7 +199,6 @@ sub _expand {
 1; # Magic true value required at end of module
 
 
-
 =pod
 
 =head1 NAME
@@ -210,7 +207,7 @@ Catalyst::Action::RenderView::ErrorHandler - Custom errorhandling in deployed ap
 
 =head1 VERSION
 
-version 0.100090
+version 0.100160
 
 =head1 SYNOPSIS
 
@@ -231,7 +228,7 @@ This module lets the developer configure what happens in case of emergency.
 
 =item Custom errorpage that fits your design you say? Aw come on :)
 
-=back 
+=back
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
@@ -276,7 +273,7 @@ in addition to rendering or sending something to the browser/client.
 
 =item "fallback" - default action taken on error.
 
-=back 
+=back
 
 The action is decided in that order.
 
@@ -370,8 +367,7 @@ This software is copyright (c) 2010 by Andreas Marienborg.
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
-=cut 
-
+=cut
 
 
 __END__

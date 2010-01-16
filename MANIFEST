@@ -1,6 +1,8 @@
+Changes
 LICENSE
 MANIFEST
 META.json
+META.yml
 Makefile.PL
 README
 dist.ini
@@ -28,6 +30,3 @@ t/lib/TestApp3/View/Default.pm
 t/lib/TestApp3/root/static/error.html
 t/release-pod-coverage.t
 t/release-pod-syntax.t
-xt/perlcritic.t
-xt/pod-coverage.t
-xt/pod.t

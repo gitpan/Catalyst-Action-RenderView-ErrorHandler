@@ -1,7 +1,5 @@
 package TestApp3::Controller::Root;
-our $VERSION = '0.100090';
-
-
+our $VERSION = '0.100160';
 
 use base qw(Catalyst::Controller);
 
