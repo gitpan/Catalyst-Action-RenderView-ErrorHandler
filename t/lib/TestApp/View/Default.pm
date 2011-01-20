@@ -1,5 +1,4 @@
 package TestApp::View::Default;
-our $VERSION = '0.100160';
 
 use MRO::Compat;
 use warnings;

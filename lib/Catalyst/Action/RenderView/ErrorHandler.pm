@@ -1,5 +1,7 @@
 package Catalyst::Action::RenderView::ErrorHandler;
-our $VERSION = '0.100160';
+BEGIN {
+  $Catalyst::Action::RenderView::ErrorHandler::VERSION = '0.100161';
+}
 # ABSTRACT: Custom errorhandling in deployed applications
 
 use warnings;
@@ -24,7 +26,7 @@ sub action {
 sub execute {
     my $self = shift;
     my ($controller, $c) = @_;
-    
+
     my $rv = $self->maybe::next::method(@_);
     return 1 unless (scalar(@{ $c->error }) or $c->res->status =~ /^4\d\d/);
     return 1 if ($c->debug);
@@ -37,7 +39,7 @@ sub execute {
 sub handle {
     my $self = shift;
     my $c = shift;
-    
+
     my $code = $c->res->status;
     if ($code == 200 and scalar(@{ $c->error })) {
         $code = 500; # We default to 500 for errors unless something else has been set.
@@ -65,7 +67,7 @@ sub handle {
                 }
             }
             $c->clear_errors;
-            
+
             # We have some actions to perform
             last ;
         }
@@ -75,10 +77,10 @@ sub render {
     my $self = shift;
     my $c = shift;
     my $args = shift;
-    
+
     if ($args->{static}) {
         my $file =  ($args->{static} !~ m|^/|)
-            ? $c->path_to($args->{static}) 
+            ? $c->path_to($args->{static})
             : $args->{static}
         ;
         open(my $fh, "<", $file) or croak "cannot read: $file";
@@ -101,16 +103,15 @@ sub render {
 sub _parse_config {
     my $self = shift;
     my $c = shift;
-    
+
     $self->_parse_actions($c, $c->config->{'error_handler'}->{'actions'});
     $self->_parse_handlers($c, $c->config->{'error_handler'}->{'handlers'});
-    
 }
 
 sub _parse_actions {
     my $self = shift;
     my $c = shift;
-    
+
     my $actions = shift;
     unless ($actions and scalar(@$actions)) {
         # We dont have any actions, lets create a default log action.
@@ -126,12 +127,13 @@ sub _parse_actions {
         my $class;
         if ($action->{'type'} and $action->{'type'} =~ /^\+/) {
             $class = $action->{'type'};
+            $class =~ s/^\+//;
         } elsif($action->{'type'}) {
             $class = ref($self) . "::Action::" . $action->{'type'};
         } else {
             croak "No type specified";
         }
-        
+
         unless(Class::Inspector->loaded($class)) {
             eval "require $class";
             if ($@) {
@@ -149,26 +151,26 @@ sub _parse_handlers {
     my $handlers = shift;
     my $codes = {};
     my $blocks = {};
-    my $fallback = { 
-        render => { static => 'root/static/error.html' }, 
-        decider => qr/./, 
-        actions => [ $self->action('default-log-error') ? $self->action('default-log-error') : undef  ] 
+    my $fallback = {
+        render => { static => 'root/static/error.html' },
+        decider => qr/./,
+        actions => [ $self->action('default-log-error') ? $self->action('default-log-error') : undef  ]
     };
     foreach my $status (keys %$handlers) {
-        my $handler = { 
+        my $handler = {
             actions => [map { $self->action($_) } @{ $handlers->{$status}->{actions}}],
-            render => ($handlers->{$status}->{template} 
+            render => ($handlers->{$status}->{template}
                 ? { template => $handlers->{$status}->{template} }
                 : { static => $handlers->{$status}->{static} }
             ),
         };
-        
+
         if ($status =~ m/\dxx/) {
             #codegroup
             my $decider = $status;
             $decider =~ s/x/\\d/g;
-            $handler->{decider} = qr/$decider/; 
-            $blocks->{$status} = $handler; 
+            $handler->{decider} = qr/$decider/;
+            $blocks->{$status} = $handler;
         } elsif ($status =~ m/\d{3}/) {
             $handler->{decider} = qr/$status/;
             $codes->{$status} = $handler;
@@ -188,7 +190,7 @@ sub _expand {
     my $self = shift;
     my $c = shift;
     my $h = shift;
-    
+
     foreach my $k (keys %$h) {
         my $v = $h->{$k};
         my $name = $c->config->{name};
@@ -207,7 +209,7 @@ Catalyst::Action::RenderView::ErrorHandler - Custom errorhandling in deployed ap
 
 =head1 VERSION
 
-version 0.100160
+version 0.100161
 
 =head1 SYNOPSIS
 
@@ -232,7 +234,7 @@ This module lets the developer configure what happens in case of emergency.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-We take our configuration from $c->config->{'error_handler'}. If you do no 
+We take our configuration from C<<$c->config->{'error_handler'}>>. If you do no
 configuration, the default is to look for the file 'root/static/error.html',
 and serve that as a static file. If all you want is to show a custom, static,
 error page, all you have to do is install the module and add it to your end
@@ -251,7 +253,7 @@ Can be Log for builtin, or you can prefix it with a +, then
 we will use it as a fully qualified class name.
 
 A typical example of an action one might want is Email, which
-could for instance use Catalyst::View::Email to send an email to
+could for instance use L<Catalyst::View::Email> to send an email to
 the developers.
 
 =head4 id
@@ -287,7 +289,7 @@ Will be read and served as a static file. This is the only option for fallback,
 since fallback will be used in case rendering a template failed for some reason.
 
 If the given string begins with an '/', we treat it as an absolute path and try
-to read it directly. If not, we pass it trough $c->path_to() to get an 
+to read it directly. If not, we pass it trough C<<$c->path_to()>> to get an
 absolute path to read from.
 
 =head2 EXAMPLE
@@ -358,11 +360,11 @@ Catalyst::Action::RenderView
 
 =head1 AUTHOR
 
-  Andreas Marienborg <andremar@cpan.org>
+Andreas Marienborg <andremar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Andreas Marienborg.
+This software is copyright (c) 2011 by Andreas Marienborg.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -4,31 +4,64 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker;
+use ExtUtils::MakeMaker 6.31;
 
-WriteMakefile(
-  DISTNAME  => 'Catalyst-Action-RenderView-ErrorHandler',
-  NAME      => 'Catalyst::Action::RenderView::ErrorHandler',
-  AUTHOR    => "Andreas\ Marienborg\ \<andremar\@cpan\.org\>",
-  ABSTRACT  => "Custom\ errorhandling\ in\ deployed\ applications",
-  VERSION   => '0.100160',
-  EXE_FILES => [ qw() ],
-  (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
-  PREREQ_PM    => {
-    "Catalyst::View::TT" => '0',
-    "base" => '0',
-    "Moose::Role" => '0',
-    "FindBin" => '0',
-    "Catalyst::Action::RenderView" => '0',
-    "Carp" => '0',
-    "Test::More" => '0',
-    "Text::Diff" => '0',
-    "Catalyst" => '0',
-    "Class::Inspector" => '0',
-    "Catalyst::Test" => '0',
-    "MRO::Compat" => '0',
-    "Moose" => '0',
+
+
+my %WriteMakefileArgs = (
+  'ABSTRACT' => 'Custom errorhandling in deployed applications',
+  'AUTHOR' => 'Andreas Marienborg <andremar@cpan.org>',
+  'BUILD_REQUIRES' => {
+    'Catalyst' => '0',
+    'Catalyst::Controller' => '0',
+    'Catalyst::Test' => '0',
+    'Catalyst::View' => '0',
+    'Catalyst::View::TT' => '0',
+    'FindBin' => '0',
+    'HTTP::Request::AsCGI' => '0',
+    'Test::More' => '0.96',
+    'Text::Diff' => '0'
   },
-  test => {TESTS => 't/*.t'}
+  'CONFIGURE_REQUIRES' => {
+    'ExtUtils::MakeMaker' => '6.31'
+  },
+  'DISTNAME' => 'Catalyst-Action-RenderView-ErrorHandler',
+  'EXE_FILES' => [],
+  'LICENSE' => 'perl',
+  'NAME' => 'Catalyst::Action::RenderView::ErrorHandler',
+  'PREREQ_PM' => {
+    'Carp' => '0',
+    'Catalyst::Action::RenderView' => '0',
+    'Catalyst::View::TT' => '0',
+    'Class::Inspector' => '0',
+    'MRO::Compat' => '0',
+    'Moose' => '0',
+    'Moose::Role' => '0'
+  },
+  'VERSION' => '0.100161',
+  'test' => {
+    'TESTS' => 't/*.t'
+  }
 );
+
+
+unless ( eval { ExtUtils::MakeMaker->VERSION(6.56) } ) {
+  my $br = delete $WriteMakefileArgs{BUILD_REQUIRES};
+  my $pp = $WriteMakefileArgs{PREREQ_PM};
+  for my $mod ( keys %$br ) {
+    if ( exists $pp->{$mod} ) {
+      $pp->{$mod} = $br->{$mod} if $br->{$mod} > $pp->{$mod};
+    }
+    else {
+      $pp->{$mod} = $br->{$mod};
+    }
+  }
+}
+
+delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
+  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
+
+WriteMakefile(%WriteMakefileArgs);
+
+
 

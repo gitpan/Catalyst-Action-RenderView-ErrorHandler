@@ -1,12 +1,13 @@
 
 
-This archive contains the distribution Catalyst-Action-RenderView-ErrorHandler, version
-0.100160:
+This archive contains the distribution Catalyst-Action-RenderView-ErrorHandler,
+version 0.100161:
 
   Custom errorhandling in deployed applications
 
-This software is copyright (c) 2010 by Andreas Marienborg.
+This software is copyright (c) 2011 by Andreas Marienborg.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
 

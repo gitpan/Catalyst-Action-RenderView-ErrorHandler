@@ -28,5 +28,4 @@ t/lib/TestApp3.pm
 t/lib/TestApp3/Controller/Root.pm
 t/lib/TestApp3/View/Default.pm
 t/lib/TestApp3/root/static/error.html
-t/release-pod-coverage.t
 t/release-pod-syntax.t

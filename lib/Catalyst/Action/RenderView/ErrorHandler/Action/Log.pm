@@ -1,5 +1,7 @@
 package Catalyst::Action::RenderView::ErrorHandler::Action::Log;
-our $VERSION = '0.100160';
+BEGIN {
+  $Catalyst::Action::RenderView::ErrorHandler::Action::Log::VERSION = '0.100161';
+}
 #ABSTRACT: A logging action for errors.
 
 use strict;
@@ -32,7 +34,7 @@ Catalyst::Action::RenderView::ErrorHandler::Action::Log - A logging action for e
 
 =head1 VERSION
 
-version 0.100160
+version 0.100161
 
 =head1 SYNOPSIS
 
@@ -83,11 +85,11 @@ Inherited from Moose.
 
 =head1 AUTHOR
 
-  Andreas Marienborg <andremar@cpan.org>
+Andreas Marienborg <andremar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Andreas Marienborg.
+This software is copyright (c) 2011 by Andreas Marienborg.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
