@@ -1,6 +1,6 @@
 package Catalyst::Action::RenderView::ErrorHandler;
-BEGIN {
-  $Catalyst::Action::RenderView::ErrorHandler::VERSION = '0.100161';
+{
+  $Catalyst::Action::RenderView::ErrorHandler::VERSION = '0.100162';
 }
 # ABSTRACT: Custom errorhandling in deployed applications
 
@@ -29,7 +29,7 @@ sub execute {
 
     my $rv = $self->maybe::next::method(@_);
     return 1 unless (scalar(@{ $c->error }) or $c->res->status =~ /^4\d\d/);
-    return 1 if ($c->debug);
+    return 1 if ($c->debug and !$c->config->{'error_handler'}->{'enable'});
     $self->actions({});
     $self->handlers([]);
     $self->_parse_config($c);
@@ -209,7 +209,7 @@ Catalyst::Action::RenderView::ErrorHandler - Custom errorhandling in deployed ap
 
 =head1 VERSION
 
-version 0.100161
+version 0.100162
 
 =head1 SYNOPSIS
 
@@ -234,7 +234,7 @@ This module lets the developer configure what happens in case of emergency.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-We take our configuration from C<<$c->config->{'error_handler'}>>. If you do no
+We take our configuration from C<< $c->config->{'error_handler'} >>. If you do no
 configuration, the default is to look for the file 'root/static/error.html',
 and serve that as a static file. If all you want is to show a custom, static,
 error page, all you have to do is install the module and add it to your end
@@ -247,14 +247,19 @@ action.
 Is an array of actions you want taken. Each value should be an hashref
 with atleast the following keys:
 
+=head3 enable
+
+If this is true, we will act even in debug mode. Great for getting debug logs AND
+error-handler templates rendered.
+
 =head4 type
 
 Can be Log for builtin, or you can prefix it with a +, then
 we will use it as a fully qualified class name.
 
-A typical example of an action one might want is Email, which
-could for instance use L<Catalyst::View::Email> to send an email to
-the developers.
+The most excellent Stefan Profanter wrote
+L<Catalyst::Action::RenderView::ErrorHandler::Action::Email>, which lets you send
+templated emails on errors.
 
 =head4 id
 
@@ -289,15 +294,16 @@ Will be read and served as a static file. This is the only option for fallback,
 since fallback will be used in case rendering a template failed for some reason.
 
 If the given string begins with an '/', we treat it as an absolute path and try
-to read it directly. If not, we pass it trough C<<$c->path_to()>> to get an
+to read it directly. If not, we pass it trough C<< $c->path_to() >> to get an
 absolute path to read from.
 
 =head2 EXAMPLE
 
     error_handler:
         actions:
-            # Note that Email is only provided here as an example, it does not
-            # exist.
+            # Check out
+            # L<Catalyst::Action::RenderView::ErrorHandler::Action::Email> if
+            # you want to send email from an action
             - type: Email
               id: email-devel
               to: andreas@example.com
@@ -332,7 +338,7 @@ It checks if there are errors, if not it it simply returns, assuming
 L<Catalyst::Action::RenderView> has handled the job. If there are errors
 we parse the configuration and try to build our handlers.
 
-Then it calls $self->handle.
+Then it calls C<< $self->handle >>.
 
 =head2 METHODS
 
@@ -346,7 +352,7 @@ templates, and then performs all actions (if any).
 =head3 render
 
 Given either a static file or a template, it will attempt to render
-it and send it to $context->res->body.
+it and send it to C<< $context->res->body >>.
 
 =head2 INHERITED METHODS
 
@@ -356,7 +362,25 @@ Inherited from L<Moose>
 
 =head1 DEPENDENCIES
 
-Catalyst::Action::RenderView
+L<Catalyst::Action::RenderView>
+
+=head1 SEE ALSO
+
+=over 4
+
+=item L<Catalyst::Action::RenderView::ErrorHandler::Action::Email>
+
+=back
+
+=head1 Thanks
+
+=over 4
+
+=item zdk L<https://github.com/zdk>
+
+=item Stefan Profanter L<https://metacpan.org/author/PROFANTER>
+
+=back
 
 =head1 AUTHOR
 

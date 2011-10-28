@@ -4,43 +4,46 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'Custom errorhandling in deployed applications',
-  'AUTHOR' => 'Andreas Marienborg <andremar@cpan.org>',
-  'BUILD_REQUIRES' => {
-    'Catalyst' => '0',
-    'Catalyst::Controller' => '0',
-    'Catalyst::Test' => '0',
-    'Catalyst::View' => '0',
-    'Catalyst::View::TT' => '0',
-    'FindBin' => '0',
-    'HTTP::Request::AsCGI' => '0',
-    'Test::More' => '0.96',
-    'Text::Diff' => '0'
+  "ABSTRACT" => "Custom errorhandling in deployed applications",
+  "AUTHOR" => "Andreas Marienborg <andremar\@cpan.org>",
+  "BUILD_REQUIRES" => {
+    "Catalyst" => 0,
+    "Catalyst::Controller" => 0,
+    "Catalyst::Test" => 0,
+    "Catalyst::View" => 0,
+    "Catalyst::View::TT" => 0,
+    "FindBin" => 0,
+    "HTTP::Request::AsCGI" => 0,
+    "Test::More" => "0.96",
+    "Text::Diff" => 0,
+    "base" => 0
   },
-  'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31'
+  "CONFIGURE_REQUIRES" => {
+    "ExtUtils::MakeMaker" => "6.30"
   },
-  'DISTNAME' => 'Catalyst-Action-RenderView-ErrorHandler',
-  'EXE_FILES' => [],
-  'LICENSE' => 'perl',
-  'NAME' => 'Catalyst::Action::RenderView::ErrorHandler',
-  'PREREQ_PM' => {
-    'Carp' => '0',
-    'Catalyst::Action::RenderView' => '0',
-    'Catalyst::View::TT' => '0',
-    'Class::Inspector' => '0',
-    'MRO::Compat' => '0',
-    'Moose' => '0',
-    'Moose::Role' => '0'
+  "DISTNAME" => "Catalyst-Action-RenderView-ErrorHandler",
+  "EXE_FILES" => [],
+  "LICENSE" => "perl",
+  "NAME" => "Catalyst::Action::RenderView::ErrorHandler",
+  "PREREQ_PM" => {
+    "Carp" => 0,
+    "Catalyst::Action::RenderView" => 0,
+    "Catalyst::View::TT" => 0,
+    "Class::Inspector" => 0,
+    "MRO::Compat" => 0,
+    "Moose" => 0,
+    "Moose::Role" => 0,
+    "strict" => 0,
+    "warnings" => 0
   },
-  'VERSION' => '0.100161',
-  'test' => {
-    'TESTS' => 't/*.t'
+  "VERSION" => "0.100162",
+  "test" => {
+    "TESTS" => "t/*.t"
   }
 );
 

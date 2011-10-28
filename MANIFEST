@@ -13,6 +13,7 @@ t/00.load.t
 t/01.usage.t
 t/02.defaults.t
 t/03.debug.t
+t/04.debug_enable.t
 t/lib/TestApp.pm
 t/lib/TestApp/Controller/Root.pm
 t/lib/TestApp/View/Default.pm
@@ -28,4 +29,8 @@ t/lib/TestApp3.pm
 t/lib/TestApp3/Controller/Root.pm
 t/lib/TestApp3/View/Default.pm
 t/lib/TestApp3/root/static/error.html
+t/lib/TestApp4.pm
+t/lib/TestApp4/Controller/Root.pm
+t/lib/TestApp4/View/Default.pm
+t/lib/TestApp4/root/static/error.html
 t/release-pod-syntax.t
