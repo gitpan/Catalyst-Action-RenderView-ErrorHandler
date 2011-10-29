@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Catalyst-Action-RenderView-ErrorHandler
-version:            0.100164
+version:            0.100165
 abstract:           Custom errorhandling in deployed applications
 author:
     - Andreas Marienborg <andremar@cpan.org>
