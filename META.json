@@ -55,7 +55,7 @@
          "web" : "http://github.com/omega/catalyst-action-renderview-errorhandler"
       }
    },
-   "version" : "0.100162",
+   "version" : "0.100163",
    "x_Dist_Zilla" : {
       "plugins" : [
          {

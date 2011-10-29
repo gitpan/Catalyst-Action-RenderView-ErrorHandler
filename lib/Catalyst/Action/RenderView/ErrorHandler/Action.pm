@@ -1,7 +1,4 @@
 package Catalyst::Action::RenderView::ErrorHandler::Action;
-{
-  $Catalyst::Action::RenderView::ErrorHandler::Action::VERSION = '0.100162';
-}
 #ABSTRACT: A Role for any actions that want to react to errors.
 
 use strict;
@@ -9,32 +6,23 @@ use warnings;
 use Moose::Role;
 
 has 'id' => (is => 'ro', isa => 'Str', required => 1);
+has 'ignorePath' => (is => 'ro', isa => 'Str', required => 0);
 
 requires 'perform';
 
 1;
 
+__END__
 
+=head1 DESCRIPTION
 
-=pod
-
-=head1 NAME
-
-Catalyst::Action::RenderView::ErrorHandler::Action - A Role for any actions that want to react to errors.
-
-=head1 VERSION
-
-version 0.100162
+A Role that should be consumed by actions that are implemented
 
 =head1 SYNOPSIS
 
     use Moose;
 
     with 'Catalyst::Action::RenderView::ErrorHandler::Action';
-
-=head1 DESCRIPTION
-
-A Role that should be consumed by actions that are implemented
 
 =head1 INTERFACE
 
@@ -59,20 +47,4 @@ email or whatnot
 =head3 meta
 
 Inherited from L<Moose>
-
-=head1 AUTHOR
-
-Andreas Marienborg <andremar@cpan.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2011 by Andreas Marienborg.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
-=cut
-
-
-__END__
 

@@ -1,7 +1,4 @@
 package Catalyst::Action::RenderView::ErrorHandler;
-{
-  $Catalyst::Action::RenderView::ErrorHandler::VERSION = '0.100162';
-}
 # ABSTRACT: Custom errorhandling in deployed applications
 
 use warnings;
@@ -12,6 +9,8 @@ use MRO::Compat;
 use Class::Inspector;
 
 use Moose;
+
+our $VERSION = '0.100163';
 
 extends 'Catalyst::Action::RenderView';
 
@@ -62,7 +61,12 @@ sub handle {
             $c->res->body($body);
             if($h->{actions}) {
                 foreach my $a (@{ $h->{actions} }) {
-                    next unless defined $a;
+		    next unless defined $a;
+		    my $regex = $a->{ignorePath};
+		    if (defined $regex && $c->request->path =~ m|$regex|gi)
+		    {
+			next;
+		    }
                     $a->perform($c);
                 }
             }
@@ -199,21 +203,12 @@ sub _expand {
     }
 }
 1; # Magic true value required at end of module
-
-
-=pod
-
-=head1 NAME
-
-Catalyst::Action::RenderView::ErrorHandler - Custom errorhandling in deployed applications
-
-=head1 VERSION
-
-version 0.100162
+__END__
 
 =head1 SYNOPSIS
 
     sub end : ActionClass('RenderView::ErrorHandler') {}
+
 
 =head1 DESCRIPTION
 
@@ -242,15 +237,15 @@ action.
 
 =head2 OPTIONS
 
-=head3 actions
-
-Is an array of actions you want taken. Each value should be an hashref
-with atleast the following keys:
-
 =head3 enable
 
 If this is true, we will act even in debug mode. Great for getting debug logs AND
 error-handler templates rendered.
+
+=head3 actions
+
+Is an array of actions you want taken. Each value should be an hashref
+with atleast the following keys:
 
 =head4 type
 
@@ -264,6 +259,14 @@ templated emails on errors.
 =head4 id
 
 The id you want to have for this action
+
+=head4 ignorePath
+
+Optional.
+If this Regex matches $c->request->path nothing will be logged. Useful if you want ot exclude a
+request path from logging/emailing a 404 error (eg. there are some bad hackers who try to break
+into your system by searching PhpMyAdmin. If you don't use it, you can exclude it and you get no mails).
+The regex is used with ignore-case and the delimiter is '|'
 
 =head3 handlers
 
@@ -283,6 +286,7 @@ in addition to rendering or sending something to the browser/client.
 =back
 
 The action is decided in that order.
+
 
 =head4 template
 
@@ -306,6 +310,7 @@ absolute path to read from.
             # you want to send email from an action
             - type: Email
               id: email-devel
+              ignorePath: '(PhpMyAdmin|SqlDump)'
               to: andreas@example.com
               subject: __MYAPP__ errors:
             - type: Log
@@ -381,20 +386,4 @@ L<Catalyst::Action::RenderView>
 =item Stefan Profanter L<https://metacpan.org/author/PROFANTER>
 
 =back
-
-=head1 AUTHOR
-
-Andreas Marienborg <andremar@cpan.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2011 by Andreas Marienborg.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
-
-=cut
-
-
-__END__
 

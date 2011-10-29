@@ -33,4 +33,3 @@ t/lib/TestApp4.pm
 t/lib/TestApp4/Controller/Root.pm
 t/lib/TestApp4/View/Default.pm
 t/lib/TestApp4/root/static/error.html
-t/release-pod-syntax.t
