@@ -1,4 +1,7 @@
 package Catalyst::Action::RenderView::ErrorHandler;
+{
+  $Catalyst::Action::RenderView::ErrorHandler::VERSION = '0.100166';
+}
 # ABSTRACT: Custom errorhandling in deployed applications
 
 use warnings;
@@ -9,8 +12,6 @@ use MRO::Compat;
 use Class::Inspector;
 
 use Moose;
-
-our $VERSION = '0.100165';
 
 extends 'Catalyst::Action::RenderView';
 
@@ -40,7 +41,8 @@ sub handle {
     my $c = shift;
 
     my $code = $c->res->status;
-    if ($code == 200 and scalar(@{ $c->error })) {
+    my $has_errors = scalar( @{ $c->error } );
+    if ($code == 200 and $has_errors) {
         $code = 500; # We default to 500 for errors unless something else has been set.
         $c->res->status($code);
     }
@@ -61,12 +63,8 @@ sub handle {
             $c->res->body($body);
             if($h->{actions}) {
                 foreach my $a (@{ $h->{actions} }) {
-		    next unless defined $a;
-		    my $regex = $a->{ignorePath};
-		    if (defined $regex && $c->request->path =~ m|$regex|gi)
-		    {
-			next;
-		    }
+                    next unless defined $a;
+                    next if $a->ignore($c->req->path);
                     $a->perform($c);
                 }
             }
@@ -75,6 +73,9 @@ sub handle {
             # We have some actions to perform
             last ;
         }
+    }
+    if ($has_errors and $code =~ m/[23]\d{2}/) {
+        $c->res->status(500); # We overwrite 2xx and 3xx with 500 if we had errors
     }
 }
 sub render {
@@ -92,8 +93,10 @@ sub render {
     } elsif ($args->{template}) {
         # We try to render it using the view, but will catch errors we hope
         my $content;
+        my %data = $self->_render_stash( $c );
+        $data{additional_template_paths} ||= [ $c->path_to('root') ]; #compatible w/ earlier version
         eval {
-            $content = $c->view->render($c, $args->{template}, { additional_template_paths => [ $c->path_to('root') ]});
+            $content = $c->view->render( $c, $args->{template}, \%data );
         };
         unless ($@) {
             return $content;
@@ -104,6 +107,19 @@ sub render {
         croak "Error rendering - no template or static";
     }
 }
+
+
+sub _render_stash {
+    my $self = shift;
+    my $c    = shift;
+    return () if !exists $c->config->{'error_handler'}->{'expose_stash'};
+    my $es = $c->config->{'error_handler'}->{'expose_stash'};
+    return map { $_ =~ $es ? ($_ => $c->stash->{$_}) : () } keys %{$c->stash}
+             if ( ref($es) eq 'Regexp' );
+    return map { $_ => $c->stash->{$_} } @{$es} if ( ref($es) eq 'ARRAY' );
+    return ( $es => $c->stash->{$es} ) if ( !ref($es) );
+}
+
 sub _parse_config {
     my $self = shift;
     my $c = shift;
@@ -203,12 +219,24 @@ sub _expand {
     }
 }
 1; # Magic true value required at end of module
+
 __END__
+
+=pod
+
+=encoding utf-8
+
+=head1 NAME
+
+Catalyst::Action::RenderView::ErrorHandler - Custom errorhandling in deployed applications
+
+=head1 VERSION
+
+version 0.100166
 
 =head1 SYNOPSIS
 
     sub end : ActionClass('RenderView::ErrorHandler') {}
-
 
 =head1 DESCRIPTION
 
@@ -237,15 +265,21 @@ action.
 
 =head2 OPTIONS
 
-=head3 enable
-
-If this is true, we will act even in debug mode. Great for getting debug logs AND
-error-handler templates rendered.
-
 =head3 actions
 
 Is an array of actions you want taken. Each value should be an hashref
 with atleast the following keys:
+
+=head4 enable
+
+If this is true, we will act even in debug mode. Great for getting debug logs AND
+error-handler templates rendered.
+
+=head4 ignorePath (Optional)
+
+If this regex matches C<< $c->req->path >>, the action will be skipped. Useful
+if you want to exclude some paths from triggering emails for instance. Can be
+used to ignore hacking attempts against PhpMyAdmin and such.
 
 =head4 type
 
@@ -260,13 +294,12 @@ templated emails on errors.
 
 The id you want to have for this action
 
-=head4 ignorePath
+=head4 expose_stash
 
-Optional.
-If this Regex matches $c->request->path nothing will be logged. Useful if you want ot exclude a
-request path from logging/emailing a 404 error (eg. there are some bad hackers who try to break
-into your system by searching PhpMyAdmin. If you don't use it, you can exclude it and you get no mails).
-The regex is used with ignore-case and the delimiter is '|'
+Either a list of keys, a regexp for matching keys, or a simple string to denote
+a single stash value.
+
+stash keys that match will be available to template handlers
 
 =head3 handlers
 
@@ -286,7 +319,6 @@ in addition to rendering or sending something to the browser/client.
 =back
 
 The action is decided in that order.
-
 
 =head4 template
 
@@ -310,7 +342,6 @@ absolute path to read from.
             # you want to send email from an action
             - type: Email
               id: email-devel
-              ignorePath: '(PhpMyAdmin|SqlDump)'
               to: andreas@example.com
               subject: __MYAPP__ errors:
             - type: Log
@@ -359,6 +390,12 @@ templates, and then performs all actions (if any).
 Given either a static file or a template, it will attempt to render
 it and send it to C<< $context->res->body >>.
 
+=head2 PRIVATE METHODS
+
+=head3 _render_stash
+
+return a list of rendering data in template from exposed stash
+
 =head2 INHERITED METHODS
 
 =head3 meta
@@ -387,3 +424,33 @@ L<Catalyst::Action::RenderView>
 
 =back
 
+=head1 AUTHOR
+
+Andreas Marienborg <andremar@cpan.org>
+
+=head1 CONTRIBUTORS
+
+=over 4
+
+=item *
+
+Andreas Marienborg <andreas.marienborg@gmail.com>
+
+=item *
+
+Pinnapong Silpsakulsuk <ping@abctech-thailand.com>
+
+=item *
+
+zdk <nx2zdk@gmail.com>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Andreas Marienborg.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
